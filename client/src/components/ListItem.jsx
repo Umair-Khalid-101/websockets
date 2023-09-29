@@ -6,7 +6,7 @@ const ListItem = ({ data, handleChat }) => {
     <div
       className="cursor-pointer
     hover:bg-blue-500 duration-75
-    py-1 rounded-[8px]
+    py-1 rounded-[8px] hover:text-white hover:font-semibold
     "
       onClick={handleChat}
     >

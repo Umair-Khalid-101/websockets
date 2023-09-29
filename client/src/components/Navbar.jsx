@@ -10,9 +10,27 @@ import navLogo from "/navLogo.png";
 // ICONS
 import { AiOutlineSearch } from "react-icons/ai";
 
+// COMPONENTS
+import ProfileModal from "./ProfileModal";
+
 const Navbar = () => {
   const navigate = useNavigate();
-  const { user, setIsOpen } = useStateContext();
+  const { user, setIsOpen, setProfileModalOpen } = useStateContext();
+
+  const openModal = () => {
+    setProfileModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setProfileModalOpen(false);
+  };
+
+  // HANDLE LOGOUT
+  const logout = () => {
+    localStorage.removeItem("userInfo");
+    setProfileModalOpen(false);
+    navigate("/login");
+  };
 
   return (
     <div>
@@ -100,8 +118,10 @@ const Navbar = () => {
 
                 <div
                   className="justify-center items-center flex relative flex-col
-                cursor-pointer mr-4
+                cursor-pointer mr-4 hover:bg-gray-50 duration-75 px-4 py-1
+                rounded-[8px]
                 "
+                  onClick={() => openModal()}
                 >
                   <img
                     src={user?.pic}
@@ -110,6 +130,34 @@ const Navbar = () => {
                   />
                   <p className="font-semibold text-sm">{user?.name}</p>
                 </div>
+                <ProfileModal onClose={closeModal}>
+                  <div
+                    className="flex flex-col justify-center items-center
+                  mt-6 gap-4
+                  "
+                  >
+                    <img
+                      src={user?.pic}
+                      alt="userpic"
+                      className="w-32 h-32 rounded-full"
+                    />
+                    <div className="flex flex-col justify-center items-center">
+                      <p className="font-semibold">{user?.name}</p>
+                      <p className="font-semibold">{user?.email}</p>
+                    </div>
+                    <button
+                      className="flex
+                    justify-center items-center
+                    bg-blue-400 px-12 py-2 rounded-[8px]
+                    text-white hover:bg-blue-500 hover:font-semibold
+                    duration-75
+                    "
+                      onClick={() => logout()}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </ProfileModal>
               </div>
             </div>
           </div>

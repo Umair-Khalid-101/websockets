@@ -17,6 +17,10 @@ export const StateContextProvider = ({ children }) => {
   const [selectedChat, setSelectedChat] = useState();
   const [myChats, setMyChats] = useState([]);
   const [groupModelOpen, setGroupModelOpen] = useState(false);
+  const [fetchAgain, setFetchAgain] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const [chatInfoModalOpen, setChatInfoModalOpen] = useState(false);
+  const [groupChatModal, setGroupChatModal] = useState(false);
   // const [socketInstance, setSocketInstance] = useState(null)
 
   useEffect(() => {
@@ -49,6 +53,14 @@ export const StateContextProvider = ({ children }) => {
         setMyChats,
         groupModelOpen,
         setGroupModelOpen,
+        fetchAgain,
+        setFetchAgain,
+        profileModalOpen,
+        setProfileModalOpen,
+        chatInfoModalOpen,
+        setChatInfoModalOpen,
+        groupChatModal,
+        setGroupChatModal,
       }}
     >
       {children}

@@ -66,7 +66,7 @@ const SignUp = () => {
       });
 
       localStorage.setItem("userInfo", JSON.stringify(data));
-
+      setUser(data);
       setLoading(false);
       navigate("/chats");
     } catch (error) {

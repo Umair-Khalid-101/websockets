@@ -5,12 +5,13 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 // CONTEXT
-// import { useStateContext } from "../context";
+import { useStateContext } from "../context";
 
 // CONSTANTS
 import { apiUrl } from "../constants";
 
 const Login = () => {
+  const { setUser } = useStateContext();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -51,7 +52,7 @@ const Login = () => {
       });
 
       localStorage.setItem("userInfo", JSON.stringify(data));
-
+      setUser(data);
       setLoading(false);
       navigate("/chats");
     } catch (error) {

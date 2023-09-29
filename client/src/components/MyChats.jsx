@@ -25,14 +25,17 @@ const MyChats = () => {
     user,
     groupModelOpen,
     setGroupModelOpen,
+    fetchAgain,
   } = useStateContext();
   const [groupChatName, setGroupChatName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchQueryResults, setSearchQueryResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [fetchingChats, setFetchingChats] = useState(false);
 
   const fetchChats = async () => {
+    setFetchingChats(true);
     try {
       const config = {
         headers: {
@@ -42,18 +45,20 @@ const MyChats = () => {
 
       const { data } = await axios.get(`${apiUrl}/api/chat`, config);
       // console.log("Chats: ", data);
-      setSelectedChat(data[0]);
+      // setSelectedChat(data[0]);
       setMyChats(data);
+      setFetchingChats(false);
     } catch (error) {
       toast.error("Failed to load chats!", {
         position: "top-right",
       });
+      setFetchingChats(fale);
     }
   };
 
   useEffect(() => {
     fetchChats();
-  }, []);
+  }, [fetchAgain]);
 
   const openModal = () => {
     setGroupModelOpen(true);
@@ -160,29 +165,32 @@ const MyChats = () => {
         return;
       }
 
-      try {
-        setLoading(true);
-        // console.log("Search Query: ", searchQuery);
-        const config = {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        };
+      if (searchQuery.length > 2) {
+        try {
+          setLoading(true);
+          // console.log("Search Query: ", searchQuery);
+          const config = {
+            headers: {
+              Authorization: `Bearer ${user?.token}`,
+            },
+          };
 
-        const { data } = await axios.get(
-          `${apiUrl}/api/user/allusers?search=${searchQuery}`,
-          config
-        );
+          const { data } = await axios.get(
+            `${apiUrl}/api/user/allusers?search=${searchQuery}`,
+            config
+          );
 
-        // console.log("Searched Users: ", data);
-        setSearchQueryResults(data);
-        setLoading(false);
-      } catch (error) {
-        toast.error("Failed to Load Search Results!", {
-          position: "top-right",
-        });
+          // console.log("Searched Users: ", data);
+          setSearchQueryResults(data);
+          setLoading(false);
+        } catch (error) {
+          toast.error("Failed to Load Search Results!", {
+            position: "top-right",
+          });
+        }
       }
     };
+
     getSearchedUsers();
   }, [searchQuery]);
 
@@ -303,27 +311,52 @@ const MyChats = () => {
           </div>
         </GroupChatModal>
       </Suspense>
-
-      {myChats &&
-        myChats.length > 0 &&
-        myChats?.map((chat) => (
-          <div
-            key={chat._id}
-            className={`mt-2
+      {fetchingChats ? (
+        <>
+          <div className="flex justify-center items-center">
+            <Vortex
+              visible={true}
+              height="80"
+              width="80"
+              ariaLabel="vortex-loading"
+              wrapperStyle={{}}
+              wrapperClass="vortex-wrapper"
+              colors={["blue", "blue", "blue", "blue", "blue", "blue", "blue"]}
+            />
+          </div>
+        </>
+      ) : (
+        <>
+          {myChats &&
+            myChats.length > 0 &&
+            myChats?.map((chat) => (
+              <div
+                key={chat._id}
+                className={`mt-2
             w-[80%] flex justify-center items-center
             py-2 rounded-[8px]
-          ${selectedChat._id === chat._id ? "bg-blue-400" : ""}
+          ${selectedChat && selectedChat._id === chat._id ? "bg-blue-400" : ""}
+          cursor-pointer hover:bg-blue-400 duration-75 hover:text-white
           `}
-          >
-            <p
-              className={`
-            ${selectedChat._id === chat._id ? "text-white font-semibold" : ""}
+                onClick={() => setSelectedChat(chat)}
+              >
+                <p
+                  className={`
+            ${
+              selectedChat && selectedChat._id === chat._id
+                ? "text-white font-semibold"
+                : ""
+            }
             `}
-            >
-              {!chat.isGroupChat ? getSender(user, chat.users) : chat.chatName}
-            </p>
-          </div>
-        ))}
+                >
+                  {!chat.isGroupChat
+                    ? getSender(user, chat.users)
+                    : chat.chatName}
+                </p>
+              </div>
+            ))}
+        </>
+      )}
     </div>
   );
 };

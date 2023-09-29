@@ -14,6 +14,7 @@ const Card = lazy(() => import("../components/Card"));
 const SearchInput = lazy(() => import("../components/SearchInput"));
 const ListItem = lazy(() => import("../components/ListItem"));
 const MyChats = lazy(() => import("../components/MyChats"));
+const ChatBox = lazy(() => import("../components/ChatBox"));
 
 // CONSTANT
 import { apiUrl } from "../constants";
@@ -123,13 +124,18 @@ const ChatPage = () => {
         </Drawer>
         <div className="flex gap-4">
           <div
-            className="w-[30%] border border-gray-100 rounded-[8px]
+            className="w-[25%] border border-gray-100 rounded-[8px]
           shadow-md h-[100vh]
           "
           >
             <MyChats />
           </div>
-          <div className="w-[80%]">Chat Screen</div>
+          <div
+            className="w-[75%] border border-gray-100 rounded-[8px]
+          shadow-md h-[100vh]"
+          >
+            <ChatBox />
+          </div>
         </div>
       </Suspense>
     </>
