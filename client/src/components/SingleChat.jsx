@@ -16,44 +16,46 @@ const SingleChat = () => {
   const [newMessage, setNewMessage] = useState("");
 
   const typingHandler = async (e) => {
+    console.log("Typing: ", e.target.value);
     setNewMessage(e.target.value);
   };
 
   const sendMessage = async (e) => {
-    if (e.key === "Enter") {
-      if (!newMessage) {
-        toast.error("Please Enter a message to send", {
+    if (e.key === "Enter" && newMessage) {
+      console.log("Sending Message: ", newMessage);
+      try {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+
+        const { data } = await axios.post(
+          `${apiUrl}/api/message`,
+          {
+            content: newMessage,
+            chatId: selectedChat?._id,
+          },
+          config
+        );
+
+        clearInput();
+        console.log("Data: ", data);
+        setMessages([...messages, data]);
+      } catch (error) {
+        toast.error("Failed to send message", {
           position: "top-right",
         });
-        return;
-      } else {
-        try {
-          const config = {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${user.token}`,
-            },
-          };
-
-          const { data } = await axios.post(
-            `${apiUrl}/api/message`,
-            {
-              content: newMessage,
-              chatId: selectedChat?._id,
-            },
-            config
-          );
-
-          console.log("Data: ", data);
-          setNewMessage("");
-          setMessages([...messages, data]);
-        } catch (error) {
-          toast.error("Failed to send message", {
-            position: "top-right",
-          });
-        }
       }
     }
+  };
+
+  useEffect(() => {}, [newMessage]);
+
+  const clearInput = () => {
+    console.log("Clearing input");
+    setNewMessage("");
   };
 
   return (
@@ -109,6 +111,8 @@ const SingleChat = () => {
               placeholder="Type your message"
               onChange={(e) => typingHandler(e)}
               onKeyDown={(e) => sendMessage(e)}
+              autoComplete="false"
+              value={newMessage}
             />
           </div>
           {/* MESSAGE INPUT */}
