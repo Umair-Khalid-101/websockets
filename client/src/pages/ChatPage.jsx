@@ -122,17 +122,17 @@ const ChatPage = () => {
             )}
           </div>
         </Drawer>
-        <div className="flex gap-4">
+        <div className="flex gap-4 h-[89]">
           <div
             className="w-[25%] border border-gray-100 rounded-[8px]
-          shadow-md h-[100vh]
+          shadow-md h-[89]
           "
           >
             <MyChats />
           </div>
           <div
             className="w-[75%] border border-gray-100 rounded-[8px]
-          shadow-md h-[100vh]"
+          shadow-md h-[89vh]"
           >
             <ChatBox />
           </div>

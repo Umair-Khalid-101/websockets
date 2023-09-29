@@ -8,7 +8,10 @@ const UserBadgeItem = ({ user, handleFunction }) => {
   bg-blue-500 relative py-2 gap-4 rounded-[8px]"
     >
       <p className="text-white text-[14px]">{user?.name}</p>
-      <GrFormClose className="text-white h-6 w-6" onClick={handleFunction} />
+      <GrFormClose
+        className="text-white h-6 w-6 cursor-pointer"
+        onClick={handleFunction}
+      />
     </div>
   );
 };

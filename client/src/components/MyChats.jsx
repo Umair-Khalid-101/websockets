@@ -200,13 +200,15 @@ const MyChats = () => {
 
   return (
     <div
-      className="flex justify-center items-center flex-col
-    "
+      className={`flex justify-center items-center flex-col
+      ${myChats.length > 10 && "h-[89vh] overflow-y-scroll scrollbar-hide"}
+    `}
     >
       <div
-        className="flex justify-around items-center
-      mt-4 gap-12
-      "
+        className={`flex justify-around items-center
+        ${myChats.length > 10 ? "mt-12" : "mt-4"} 
+      gap-12
+      `}
       >
         <h1 className="font-semibold ">My Chats</h1>
         <button

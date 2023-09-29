@@ -222,7 +222,37 @@ const ChatBox = () => {
       setFetchAgain(!fetchAgain);
       setLoading(false);
     } catch (error) {
-      toast.error("Could Not Add User!", {
+      toast.error("Could Not Remove User!", {
+        position: "top-right",
+      });
+      setLoading(false);
+    }
+  };
+
+  // HANDLE LEAVE GROUP
+  const handleLeave = async () => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      };
+
+      const { data } = await axios.put(
+        `${apiUrl}/api/chat/groupremove`,
+        {
+          chatId: selectedChat?._id,
+          userId: user?._id,
+        },
+        config
+      );
+
+      setSelectedChat();
+      setFetchAgain(!fetchAgain);
+      setLoading(false);
+      closeModal();
+    } catch (error) {
+      toast.error("Could Not Leave Group!", {
         position: "top-right",
       });
       setLoading(false);
@@ -396,7 +426,7 @@ const ChatBox = () => {
             hover:bg-red-600 duration-75
             text-[14px] font-semibold
             flex justify-center items-center gap-2"
-                // onClick={handleCreateChat}
+                onClick={() => handleLeave()}
               >
                 Leave Group
               </button>
