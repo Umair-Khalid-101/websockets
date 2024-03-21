@@ -23,15 +23,6 @@ export const StateContextProvider = ({ children }) => {
   const [groupChatModal, setGroupChatModal] = useState(false);
   // const [socketInstance, setSocketInstance] = useState(null)
 
-  useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    setUser(userInfo);
-
-    if (!userInfo) {
-      navigate("/login");
-    }
-  }, [navigate]);
-
   return (
     <StateContext.Provider
       value={{

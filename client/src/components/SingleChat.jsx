@@ -9,8 +9,11 @@ import { useStateContext } from "../context";
 // CONSTANTS
 import { apiUrl } from "../constants";
 
+// COMPONENT
+import ScrollableChat from "./ScrollableChat";
+
 const SingleChat = () => {
-  const { user, selectedChat, setSelectedChat } = useStateContext();
+  const { user, selectedChat, fetchAgain } = useStateContext();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
@@ -18,6 +21,8 @@ const SingleChat = () => {
   const typingHandler = async (e) => {
     console.log("Typing: ", e.target.value);
     setNewMessage(e.target.value);
+
+    // todo typing indicator logic
   };
 
   const sendMessage = async (e) => {
@@ -31,6 +36,7 @@ const SingleChat = () => {
           },
         };
 
+        clearInput();
         const { data } = await axios.post(
           `${apiUrl}/api/message`,
           {
@@ -39,9 +45,10 @@ const SingleChat = () => {
           },
           config
         );
-
-        clearInput();
-        console.log("Data: ", data);
+        console.log(
+          "\nDATA: \n\x1b[32m%s\x1b[0m\n",
+          JSON.stringify(data, null, 2)
+        );
         setMessages([...messages, data]);
       } catch (error) {
         toast.error("Failed to send message", {
@@ -51,11 +58,45 @@ const SingleChat = () => {
     }
   };
 
-  useEffect(() => {}, [newMessage]);
+  useEffect(() => {
+    fetchMessages();
+  }, [selectedChat, fetchAgain]);
 
   const clearInput = () => {
     console.log("Clearing input");
     setNewMessage("");
+  };
+
+  const fetchMessages = async () => {
+    if (!selectedChat) return;
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      setLoading(true);
+      const { data } = await axios.get(
+        `${apiUrl}/api/message/${selectedChat._id}`,
+        config
+      );
+      console.log(
+        "\nMESSAGES: \n\x1b[32m%s\x1b[0m\n",
+        JSON.stringify(data, null, 2)
+      );
+      setMessages(data);
+      setLoading(false);
+    } catch (error) {
+      console.log(
+        "\nError-(fetchMessages): \n\x1b[32m%s\x1b[0m\n",
+        JSON.stringify(error, null, 2)
+      );
+      toast.error("Failed to fetch messages", {
+        position: "top-right",
+      });
+      setLoading(false);
+    }
   };
 
   return (
@@ -94,7 +135,9 @@ const SingleChat = () => {
             ) : (
               <>
                 {/* MESSAGES */}
-                <div></div>
+                <div className="">
+                  <ScrollableChat messages={messages} />
+                </div>
                 {/* MESSAGES */}
               </>
             )}

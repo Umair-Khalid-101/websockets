@@ -225,7 +225,7 @@ const SignUp = () => {
 
             {file && (
               <div
-                className="ml-3 h-16 flex 
+                className="ml-3 h-16 flex
               items-center
               "
               >

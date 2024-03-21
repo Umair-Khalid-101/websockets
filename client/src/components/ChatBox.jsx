@@ -267,7 +267,7 @@ const ChatBox = () => {
           className={`
         ${
           selectedChat &&
-          `my-4 py-2 cursor-pointer 
+          `py-2 cursor-pointer 
         bg-blue-400 rounded-[8px]
         hover:bg-blue-500 duration-75`
         }
@@ -288,7 +288,7 @@ const ChatBox = () => {
           className={`
           ${
             selectedChat &&
-            `my-4 py-2 cursor-pointer 
+            `py-2 cursor-pointer 
           bg-blue-400 rounded-[8px]
           hover:bg-blue-500 duration-75`
           }
@@ -309,7 +309,6 @@ const ChatBox = () => {
           <>
             <div
               className="flex justify-center items-center flex-col gap-4
-          mt-8
           "
             >
               <h1 className="font-semibold text-[20px]">
